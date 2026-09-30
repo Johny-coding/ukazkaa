@@ -1,0 +1,784 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8faf7">
+  <meta name="description" content="Moje Sámoška — čerstvé potraviny, poctivý výběr a akční nabídky v sousedské prodejně.">
+  <title>Moje Sámoška | Čerstvé potraviny každý den</title>
+  <style>
+    :root{color-scheme:light;--page:#f8faf7;--surface:#fff;--ink:#22352b;--muted:#728076;--line:#e7ece6;--green:#32674a;--green-dark:#204d38;--green-soft:#edf5ed;--gold:#f4bd59;--rose:#a8413b;--shadow:0 14px 38px rgba(41,62,46,.07)}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:110px}
+    body{margin:0;background:var(--page);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    body.modal-open{overflow:hidden}
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    button:disabled{cursor:not-allowed}
+    a{color:inherit;text-decoration:none}
+    img{display:block;max-width:100%}
+    [hidden]{display:none!important}
+    button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid rgba(79,137,97,.35);outline-offset:3px}
+    ::selection{background:#d8ead8;color:#173c2a}
+    .shell{width:min(100% - 48px,1220px);margin-inline:auto}
+    .announcement{min-height:35px;display:flex;align-items:center;background:#214d39;color:#e5efe6;font-size:10px;font-weight:800;letter-spacing:.11em;text-transform:uppercase}
+    .announcement__inner{display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .announcement__message,.announcement__hours{display:inline-flex;align-items:center;gap:9px}
+    .announcement__dot{width:6px;height:6px;flex:0 0 auto;border-radius:50%;background:#b8dcae;box-shadow:0 0 0 4px rgba(184,220,174,.11)}
+    .site-header{position:sticky;z-index:30;top:0;border-bottom:1px solid rgba(37,70,48,.08);background:rgba(255,255,255,.95);backdrop-filter:blur(14px)}
+    .site-header__inner{min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:22px}
+    .brand{display:inline-flex;min-width:max-content;align-items:center;gap:11px}
+    .brand__mark{width:43px;height:43px;display:grid;flex:0 0 auto;place-items:center;border-radius:15px;background:#eaf3e9;color:#386a4d}
+    .brand__copy{display:grid;gap:3px}
+    .brand__name{color:#20382a;font-size:16px;font-weight:900;letter-spacing:-.045em;line-height:1}
+    .brand__tagline{color:#89958c;font-size:8px;font-weight:850;letter-spacing:.13em;text-transform:uppercase}
+    .brand svg{width:23px;height:23px}
+    .site-nav{display:flex;align-items:center;justify-content:center;gap:clamp(10px,1.5vw,21px)}
+    .nav-link{padding:9px 0;border:0;background:transparent;color:#59675e;font-size:11px;font-weight:750;white-space:nowrap;transition:color .15s}
+    .nav-link:hover{color:var(--green)}
+    .mobile-nav{display:none}
+    .button{min-height:47px;display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:0 18px;border:1px solid transparent;border-radius:13px;font-size:12px;font-weight:850;line-height:1;transition:transform .16s,background .16s,border-color .16s,box-shadow .16s}
+    .button:hover:not(:disabled){transform:translateY(-1px)}
+    .button--primary{background:var(--green);color:#fff;box-shadow:0 7px 18px rgba(43,101,67,.16)}
+    .button--primary:hover:not(:disabled){background:#28583e;box-shadow:0 10px 23px rgba(43,101,67,.22)}
+    .button--soft{border-color:#dfe8de;background:#fff;color:#395544}
+    .button--soft:hover:not(:disabled){border-color:#c5d9c5;background:#f7fbf6}
+    .button--danger{background:#a8413b;color:#fff}
+    .button--small{min-height:37px;gap:7px;padding:0 11px;border-radius:10px;font-size:10px}
+    .button--wide{width:100%}
+    .admin-entry{min-height:43px;flex:0 0 auto;padding-inline:14px;font-size:11px}
+    .button svg,.nav-link svg,.icon-button svg,.row-button svg{width:16px;height:16px;flex:0 0 auto}
+    .hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.96fr);align-items:center;gap:clamp(44px,7vw,95px);padding-top:62px;padding-bottom:52px}
+    .hero__copy{max-width:570px}
+    .eyebrow{display:inline-flex;align-items:center;gap:9px;padding:8px 12px;border:1px solid #dfeade;border-radius:999px;background:rgba(255,255,255,.78);color:#47714f;font-size:9px;font-weight:900;letter-spacing:.13em;text-transform:uppercase}
+    .eyebrow__dot{width:7px;height:7px;border-radius:50%;background:#6a9c68;box-shadow:0 0 0 4px #e6f0e4}
+    .hero h1{max-width:640px;margin:24px 0 19px;color:#23372b;font-size:clamp(48px,5.2vw,72px);font-weight:900;letter-spacing:-.067em;line-height:1.015}
+    .hero h1 span{color:#57865d}
+    .hero__description{max-width:485px;margin:0;color:#68776d;font-size:14px;line-height:1.85}
+    .hero__actions{display:flex;flex-wrap:wrap;align-items:center;gap:11px;margin-top:28px}
+    .hero__note{display:flex;align-items:center;gap:10px;margin-top:27px;color:#738077;font-size:11px;font-weight:650}
+    .hero__note-mark{width:29px;height:29px;display:grid;place-items:center;border-radius:50%;background:#e9f2e7;color:#54805a}
+    .hero__visual{position:relative;min-height:420px;isolation:isolate}
+    .hero__visual:before{position:absolute;z-index:-1;right:-15px;bottom:-15px;width:72%;height:75%;border-radius:34px;background:#dfeadd;content:""}
+    .hero__photo-frame{position:absolute;inset:0 13px 14px 0;overflow:hidden;border-radius:30px;background:#dfe9dc;box-shadow:0 26px 55px rgba(35,61,43,.16)}
+    .hero__photo-frame:after{position:absolute;inset:45% 0 0;background:linear-gradient(180deg,transparent,rgba(20,42,28,.46));content:"";pointer-events:none}
+    .hero__photo{width:100%;height:100%;object-fit:cover;object-position:center 48%}
+    .hero__photo-caption{position:absolute;z-index:1;right:26px;bottom:25px;left:26px;display:flex;align-items:flex-end;justify-content:space-between;gap:15px;color:white}
+    .hero__photo-caption small{display:block;margin-bottom:6px;color:rgba(255,255,255,.8);font-size:9px;font-weight:850;letter-spacing:.15em;text-transform:uppercase}
+    .hero__photo-caption strong{font-size:19px;font-weight:850;letter-spacing:-.035em}
+    .hero__photo-caption>span{width:43px;height:43px;display:grid;flex:0 0 auto;place-items:center;border:1px solid rgba(255,255,255,.5);border-radius:50%;background:rgba(255,255,255,.15);backdrop-filter:blur(8px)}
+    .hero__seal{position:absolute;z-index:2;top:22px;right:-8px;width:104px;height:104px;display:grid;align-content:center;justify-items:center;border:5px solid rgba(255,255,255,.8);border-radius:50%;background:#f5c86d;color:#35533a;box-shadow:0 10px 25px rgba(46,67,47,.16);text-align:center;transform:rotate(8deg)}
+    .hero__seal strong{margin-top:4px;font-size:9px;font-weight:950;letter-spacing:.08em;line-height:1.25;text-transform:uppercase}
+    .benefits{position:relative;z-index:2;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:5px;padding:18px 24px;border:1px solid #e9eee8;border-radius:19px;background:#fff;box-shadow:0 13px 35px rgba(41,64,47,.055)}
+    .benefit{display:flex;align-items:center;gap:13px;padding:0 20px}
+    .benefit:first-child{padding-left:4px}
+    .benefit+.benefit{border-left:1px solid #e9eee8}
+    .benefit__icon{width:41px;height:41px;display:grid;flex:0 0 auto;place-items:center;border-radius:13px;background:#f0f6ef;color:#558061}
+    .benefit strong,.benefit small{display:block}
+    .benefit strong{margin-bottom:4px;color:#304536;font-size:11px;font-weight:850}
+    .benefit small{color:#849087;font-size:9px}
+    .section{padding-top:80px;padding-bottom:80px;scroll-margin-top:110px}
+    .section--sale{margin-top:64px;border-top:1px solid #f1eee5;border-bottom:1px solid #f1eee5;background:#fffdf7}
+    .section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:30px}
+    .section-heading__copy{max-width:680px}
+    .section-kicker{display:block;margin-bottom:10px;color:#6b916d;font-size:9px;font-weight:900;letter-spacing:.15em;text-transform:uppercase}
+    .section-heading h2{margin:0;color:#26382d;font-size:clamp(30px,3.4vw,41px);font-weight:900;letter-spacing:-.06em;line-height:1.1}
+    .section-heading p{max-width:470px;margin:10px 0 0;color:#78837b;font-size:12px;line-height:1.75}
+    .section-heading__aside{padding-bottom:4px;color:#818b82;font-size:10px;font-weight:700;white-space:nowrap}
+    .product-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+    .product-grid--sale{max-width:700px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+    .product-card{overflow:hidden;border:1px solid #e8ede7;border-radius:19px;background:#fff;box-shadow:0 6px 19px rgba(41,62,46,.035);transition:transform .18s,box-shadow .18s,border-color .18s}
+    .product-card:hover{transform:translateY(-4px);border-color:#d5e2d3;box-shadow:0 17px 34px rgba(41,62,46,.09)}
+    .product-card__image-wrap{position:relative;height:205px;overflow:hidden;background:#edf2ea}
+    .product-card__image{width:100%;height:100%;object-fit:cover;transition:transform .35s}
+    .product-card:hover .product-card__image{transform:scale(1.045)}
+    .product-card__labels{position:absolute;top:12px;left:12px;display:flex;gap:7px}
+    .sale-badge{display:inline-flex;align-items:center;gap:5px;padding:7px 9px;border-radius:8px;background:#f5c45e;color:#4b3d1f;font-size:8px;font-weight:950;letter-spacing:.08em;line-height:1}
+    .product-card__body{padding:15px 16px 17px}
+    .product-category{display:block;margin-bottom:7px;color:#88938a;font-size:8px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}
+    .product-title{min-height:42px;margin:0;color:#2b3b30;font-size:15px;font-weight:850;letter-spacing:-.027em;line-height:1.35}
+    .product-card__price-row{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:11px;padding-top:12px;border-top:1px solid #eef1ec}
+    .product-price{color:#294936;font-size:21px;font-weight:950;letter-spacing:-.05em;white-space:nowrap}
+    .product-price small{margin-left:2px;font-size:10px;font-weight:800;letter-spacing:0}
+    .stock-badge{display:inline-flex;min-height:25px;align-items:center;justify-content:center;gap:6px;padding:5px 8px;border-radius:8px;font-size:8px;font-weight:850;line-height:1.2;white-space:nowrap}
+    .stock-badge--available{background:#edf6ed;color:#3c754a}
+    .stock-badge--empty{background:#fff0ee;color:#a8413b}
+    .stock-badge__dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+    .filter-list{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
+    .filter-chip{min-height:41px;display:inline-flex;align-items:center;gap:8px;padding:0 13px;border:1px solid #e4eae2;border-radius:12px;background:#fff;color:#617067;font-size:10px;font-weight:800;transition:background .15s,border-color .15s,color .15s,transform .15s}
+    .filter-chip:hover{transform:translateY(-1px);border-color:#cbdcc9}
+    .filter-chip--active{border-color:#32674a;background:#32674a;color:#fff;box-shadow:0 6px 16px rgba(50,103,74,.15)}
+    .filter-chip__emoji{font-size:14px;line-height:1}
+    .filter-chip__count{min-width:19px;height:19px;display:grid;place-items:center;padding:0 4px;border-radius:6px;background:rgba(37,73,49,.07);font-size:8px}
+    .filter-chip--active .filter-chip__count{background:rgba(255,255,255,.16)}
+    .empty-state{padding:48px 22px;border:1px dashed #d8e2d6;border-radius:19px;background:rgba(255,255,255,.65);color:#6d7b70;text-align:center;font-size:12px;line-height:1.7}
+    .empty-state strong{display:block;margin-bottom:5px;color:#3e5645;font-size:14px}
+    .local-banner{position:relative;display:flex;align-items:center;justify-content:space-between;gap:25px;overflow:hidden;margin-top:0;margin-bottom:78px;padding:31px 36px;border-radius:23px;background:#eaf2e7}
+    .local-banner:after{position:absolute;top:-70px;right:23%;width:210px;height:210px;border:1px solid rgba(57,103,66,.1);border-radius:50%;box-shadow:0 0 0 22px rgba(57,103,66,.035),0 0 0 44px rgba(57,103,66,.025);content:""}
+    .local-banner__copy{position:relative;z-index:1}
+    .local-banner__copy span{display:block;margin-bottom:8px;color:#648b65;font-size:9px;font-weight:950;letter-spacing:.14em;text-transform:uppercase}
+    .local-banner__copy h2{margin:0;color:#2d4a35;font-size:clamp(22px,2.7vw,31px);font-weight:900;letter-spacing:-.055em}
+    .local-banner__copy p{margin:8px 0 0;color:#6d7d6e;font-size:11px;line-height:1.6}
+    .local-banner .button{position:relative;z-index:1;flex:0 0 auto}
+    .site-footer{border-top:1px solid #e8ede7;background:#fff}
+    .site-footer__inner{min-height:83px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:20px}
+    .footer-copy{color:#88938a;font-size:9px;line-height:1.7}
+    .footer-links{display:flex;gap:16px;color:#647369;font-size:9px;font-weight:800}
+    .footer-links a:hover{color:var(--green)}
+    /* Admin */
+    .admin-shell{min-height:100vh;background:radial-gradient(ellipse at 9% 0%,rgba(226,239,224,.54),transparent 34%),var(--page)}
+    .admin-header{border-bottom:1px solid #e7ece6;background:rgba(255,255,255,.93)}
+    .admin-header__inner{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .admin-identity{display:flex;align-items:center;gap:16px}
+    .admin-label{padding:7px 10px;border:1px solid #e1eae0;border-radius:999px;background:#f5f9f4;color:#5d7d60;font-size:8px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
+    .admin-header__actions{display:flex;align-items:center;gap:8px}
+    .admin-header__actions .button{min-height:39px;font-size:10px}
+    .admin-main{padding-top:48px;padding-bottom:75px}
+    .admin-welcome{display:flex;align-items:flex-end;justify-content:space-between;gap:22px;margin-bottom:25px}
+    .admin-welcome h1{margin:0;color:#26382d;font-size:clamp(34px,4vw,44px);font-weight:900;letter-spacing:-.06em;line-height:1.1}
+    .admin-welcome p{margin:9px 0 0;color:#768279;font-size:12px;line-height:1.7}
+    .admin-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:23px}
+    .stat-card{padding:18px 19px;border:1px solid #e8ede7;border-radius:16px;background:#fff;box-shadow:0 7px 20px rgba(41,62,46,.035)}
+    .stat-card__top{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#7d8a80;font-size:9px;font-weight:750}
+    .stat-card__icon{width:33px;height:33px;display:grid;place-items:center;border-radius:10px;background:#eff6ee;color:#57805c}
+    .stat-card__value{display:block;margin-top:10px;color:#2d4534;font-size:27px;font-weight:950;letter-spacing:-.06em}
+    .stat-card__hint{display:block;margin-top:2px;color:#8a958d;font-size:9px}
+    .inventory-panel{overflow:hidden;border:1px solid #e6ebe5;border-radius:20px;background:#fff;box-shadow:0 12px 32px rgba(38,62,43,.045)}
+    .inventory-panel__header{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:21px 23px;border-bottom:1px solid #edf0eb}
+    .inventory-panel__title h2{margin:0;color:#2f4435;font-size:15px;font-weight:900;letter-spacing:-.025em}
+    .inventory-panel__title p{margin:5px 0 0;color:#89938b;font-size:9px}
+    .table-scroll{width:100%;overflow-x:auto}
+    .product-table{width:100%;min-width:790px;border-collapse:collapse;text-align:left}
+    .product-table th{padding:12px 17px;background:#fbfcfa;color:#869087;font-size:8px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
+    .product-table td{padding:13px 17px;border-top:1px solid #f0f2ef;color:#526158;font-size:10px;vertical-align:middle}
+    .product-table tbody tr:hover{background:#fcfdfb}
+    .table-product{min-width:205px;display:flex;align-items:center;gap:11px}
+    .table-product__image{width:46px;height:46px;flex:0 0 auto;overflow:hidden;border-radius:11px;background:#edf2ea}
+    .table-product__image img{width:100%;height:100%;object-fit:cover}
+    .table-product__text strong,.table-product__text small{display:block}
+    .table-product__text strong{margin-bottom:4px;color:#314437;font-size:10px;font-weight:850}
+    .table-product__text small{color:#8a958c;font-size:8px}
+    .table-price{color:#304a38!important;font-size:11px!important;font-weight:900;white-space:nowrap}
+    .table-action-group{display:flex;align-items:center;gap:6px;white-space:nowrap}
+    .row-button{min-height:32px;display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:0 8px;border:1px solid #e5ebe4;border-radius:8px;background:#fff;color:#53665a;font-size:9px;font-weight:800;transition:all .15s}
+    .row-button:hover{border-color:#cbdcc9;background:#f5f9f4;color:#2e6847}
+    .row-button--delete:hover{border-color:#f0d4d1;background:#fff5f3;color:#a8413b}
+    .inventory-empty{padding:42px 22px;color:#819087;font-size:11px;text-align:center}
+    .admin-footnote{display:flex;align-items:center;gap:8px;margin-top:15px;color:#89938b;font-size:9px;line-height:1.6}
+    .admin-footnote__dot{width:7px;height:7px;flex:0 0 auto;border-radius:50%;background:#e1a94a}
+    /* Dialogs */
+    .overlay{position:fixed;z-index:100;inset:0;display:grid;overflow-y:auto;place-items:center;padding:20px;background:rgba(22,37,27,.55);backdrop-filter:blur(7px);animation:fade-in .14s ease-out}
+    .dialog{position:relative;width:min(100%,460px);max-height:min(91vh,850px);overflow-y:auto;padding:27px;border:1px solid rgba(255,255,255,.7);border-radius:24px;background:#fff;box-shadow:0 30px 85px rgba(15,30,20,.25);animation:rise-in .18s ease-out}
+    .dialog--wide{width:min(100%,630px)}
+    .dialog__close{position:absolute;top:15px;right:15px;width:34px;height:34px;display:grid;place-items:center;border:1px solid #e9ede8;border-radius:10px;background:#fff;color:#718076}
+    .dialog__close:hover{background:#f3f7f2;color:#314b39}
+    .dialog__icon{width:46px;height:46px;display:grid;margin-bottom:16px;place-items:center;border-radius:14px;background:#edf5eb;color:#477653}
+    .dialog__title{margin:0;padding-right:35px;color:#283b2e;font-size:23px;font-weight:900;letter-spacing:-.05em;line-height:1.2}
+    .dialog__subtitle{margin:8px 0 21px;color:#79857c;font-size:11px;line-height:1.7}
+    .form-stack{display:grid;gap:13px}
+    .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+    .field{display:grid;min-width:0;gap:6px}
+    .field--full{grid-column:1/-1}
+    .field__label{color:#4b5e51;font-size:9px;font-weight:900}
+    .input,.select{width:100%;min-height:44px;padding:0 11px;border:1px solid #e0e7df;border-radius:10px;background:#fff;color:#304236;font-size:11px;transition:border-color .15s,box-shadow .15s}
+    .input::placeholder{color:#a5afa7}
+    .input:focus,.select:focus{border-color:#91b393;outline:0;box-shadow:0 0 0 3px rgba(104,151,106,.13)}
+    .input:disabled{background:#f4f6f3;color:#9da79e}
+    .field-hint{color:#8a958d;font-size:8px;line-height:1.5}
+    .password-wrap{position:relative}
+    .password-wrap .input{padding-right:65px}
+    .password-toggle{position:absolute;top:50%;right:10px;padding:4px 0;border:0;background:transparent;color:#66806a;font-size:8px;font-weight:900;transform:translateY(-50%)}
+    .demo-credentials{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:2px;padding:11px 12px;border:1px dashed #dce8da;border-radius:10px;background:#f6faf4;color:#768477;font-size:9px}
+    .demo-credentials strong{color:#47714f;font-weight:900}
+    .error-message{margin:0;padding:9px 11px;border:1px solid #f0d6d2;border-radius:9px;background:#fff6f4;color:#a23d36;font-size:9px;line-height:1.5}
+    .check-card{min-height:46px;display:flex;align-items:center;gap:9px;padding:9px 11px;border:1px solid #e4eae3;border-radius:10px;background:#fbfcfa;color:#506056;font-size:10px;font-weight:800}
+    .check-card--checked{border-color:#d1e2cf;background:#f4f9f2}
+    .check-card input{width:16px;height:16px;flex:0 0 auto;accent-color:#4f8961}
+    .dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:21px;padding-top:15px;border-top:1px solid #edf0ec}
+    .dialog-actions .button{min-height:40px;font-size:10px}
+    .confirm-copy{margin:10px 0 0;color:#77837a;font-size:11px;line-height:1.7}
+    .confirm-name{color:#314938;font-weight:900}
+    .toast{position:fixed;z-index:120;right:22px;bottom:22px;max-width:min(420px,calc(100vw - 30px));display:flex;align-items:center;gap:9px;padding:13px 16px;border:1px solid rgba(255,255,255,.16);border-radius:13px;background:#244c37;color:#fff;box-shadow:0 14px 36px rgba(19,44,27,.23);font-size:10px;font-weight:800;animation:toast-up .17s ease-out}
+    .toast__check{width:22px;height:22px;display:grid;flex:0 0 auto;place-items:center;border-radius:50%;background:rgba(255,255,255,.17)}
+    @keyframes fade-in{from{opacity:0}to{opacity:1}}
+    @keyframes rise-in{from{opacity:0;transform:translateY(9px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
+    @keyframes toast-up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    @media(max-width:1100px){.site-nav{gap:11px}.nav-link{font-size:10px}.site-header__inner{gap:14px}.product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.product-card__image-wrap{height:225px}}
+    @media(max-width:950px){.site-nav{display:none}.mobile-nav{display:flex;gap:7px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none}.mobile-nav::-webkit-scrollbar{display:none}.mobile-nav .nav-link{min-height:31px;flex:0 0 auto;padding:0 11px;border:1px solid #e5ebe4;border-radius:999px;background:#fff;font-size:9px}.mobile-nav .nav-link:hover{border-color:#cbdcc9;background:#f5f9f4}.hero{gap:42px}}
+    @media(max-width:700px){html{scroll-padding-top:105px}.shell{width:min(100% - 32px,1220px)}.announcement{min-height:31px;font-size:8px}.announcement__hours{display:none}.site-header__inner{min-height:67px;gap:9px}.brand{gap:8px}.brand__mark{width:37px;height:37px;border-radius:12px}.brand__name{font-size:13px}.brand__tagline{font-size:6px}.admin-entry{min-height:38px;gap:6px;padding:0 9px;font-size:9px}.hero{grid-template-columns:1fr;gap:30px;padding-top:40px;padding-bottom:34px}.hero h1{margin-top:19px;font-size:clamp(44px,11vw,60px)}.hero__description{font-size:12px}.hero__actions{margin-top:21px}.hero__visual{min-height:340px}.hero__photo-frame{inset:0 9px 10px 0}.hero__seal{right:-2px;width:88px;height:88px}.benefits{grid-template-columns:1fr;gap:0;padding:7px 17px}.benefit,.benefit:first-child{padding:11px 0}.benefit+.benefit{border-top:1px solid #e9eee8;border-left:0}.section{padding-top:59px;padding-bottom:59px}.section--sale{margin-top:44px}.section-heading{display:block;margin-bottom:23px}.section-heading h2{font-size:31px}.section-heading__aside{display:block;margin-top:11px;white-space:normal}.product-grid{gap:12px}.product-card{border-radius:15px}.product-card__image-wrap{height:154px}.product-card__labels{top:8px;left:8px}.product-card__body{padding:12px 11px 13px}.product-category{font-size:7px}.product-title{min-height:38px;font-size:12px}.product-card__price-row{align-items:flex-start;flex-direction:column;gap:7px;margin-top:8px;padding-top:9px}.product-price{font-size:19px}.stock-badge{min-height:23px;font-size:7px}.filter-list{gap:6px;margin-bottom:19px}.filter-chip{min-height:36px;gap:6px;padding:0 9px;font-size:9px}.filter-chip__emoji{font-size:12px}.local-banner{align-items:flex-start;flex-direction:column;gap:17px;margin-bottom:55px;padding:23px 20px}.local-banner:after{right:-85px}.site-footer__inner{align-items:flex-start;flex-direction:column;gap:11px;padding-block:20px}.admin-header__inner{min-height:66px}.admin-label{display:none}.admin-header__actions{gap:5px}.admin-header__actions .button{min-height:35px;padding-inline:9px;font-size:8px}.admin-main{padding-top:33px;padding-bottom:50px}.admin-welcome{align-items:flex-start;flex-direction:column;margin-bottom:19px}.admin-stats{grid-template-columns:1fr;gap:8px}.stat-card{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px}.stat-card__top{flex-direction:row-reverse;justify-content:flex-end}.stat-card__value{margin:0 0 0 auto;font-size:23px}.stat-card__hint{display:none}.inventory-panel__header{align-items:flex-start;flex-direction:column;padding:17px}.inventory-panel__header .button{width:100%}.inventory-panel{border-radius:16px}.admin-footnote{align-items:flex-start}}
+    @media(max-width:420px){.hero__visual{min-height:295px}.product-card__image-wrap{height:128px}.product-title{font-size:11px}.stock-badge{white-space:normal}.dialog{padding:22px 19px;border-radius:20px}.form-grid{grid-template-columns:1fr}.field--full{grid-column:auto}.overlay{padding:12px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+  <div class="announcement">
+    <div class="shell announcement__inner">
+      <span class="announcement__message"><span class="announcement__dot"></span> Vaše sousedská prodejna s poctivým výběrem</span>
+      <span class="announcement__hours" id="announcement-hours"></span>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="shell site-header__inner">
+      <a class="brand" href="#domu" aria-label="Moje Sámoška — úvodní stránka">
+        <span class="brand__mark" id="brand-icon"></span>
+        <span class="brand__copy"><span class="brand__name">Moje Sámoška</span><span class="brand__tagline">Dobré věci od sousedů</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Hlavní navigace">
+        <a class="nav-link" href="#akce">Akční nabídka</a>
+        <button class="nav-link" type="button" data-nav-category="Pečivo">Pečivo</button>
+        <button class="nav-link" type="button" data-nav-category="Mléčné výrobky">Mléčné výrobky</button>
+        <button class="nav-link" type="button" data-nav-category="Uzeniny">Uzeniny</button>
+        <button class="nav-link" type="button" data-nav-category="Ovoce a zelenina">Ovoce &amp; zelenina</button>
+      </nav>
+    </div>
+    <nav class="shell mobile-nav" aria-label="Kategorie produktů">
+      <a class="nav-link" href="#akce">Akce</a>
+      <button class="nav-link" type="button" data-nav-category="Pečivo">🥖 Pečivo</button>
+      <button class="nav-link" type="button" data-nav-category="Mléčné výrobky">🥛 Mléčné</button>
+      <button class="nav-link" type="button" data-nav-category="Uzeniny">🥩 Uzeniny</button>
+      <button class="nav-link" type="button" data-nav-category="Ovoce a zelenina">🍎 Ovoce &amp; zelenina</button>
+    </nav>
+  </header>
+
+  <main id="store-view">
+    <section class="shell hero" id="domu">
+      <div class="hero__copy">
+        <span class="eyebrow"><span class="eyebrow__dot"></span> Vaše sousedství, vaše sámoška</span>
+        <h1>Čerstvé potraviny <span>každý den.</span></h1>
+        <p class="hero__description">Dobré jídlo nemusí cestovat přes půl světa. Vyberte si poctivé každodenní dobroty, čerstvé pečivo i něco navíc za příjemnou cenu.</p>
+        <div class="hero__actions">
+          <a class="button button--primary" href="#katalog">Prohlédnout nabídku <span data-icon="arrow"></span></a>
+          <a class="button button--soft" href="#akce">Dnešní akce</a>
+        </div>
+        <div class="hero__note"><span class="hero__note-mark" data-icon="leaf"></span><span>Malý obchod. Velká radost z dobrých surovin.</span></div>
+      </div>
+      <div class="hero__visual" aria-label="Čerstvá zelenina a suroviny">
+        <div class="hero__photo-frame">
+          <img class="hero__photo" id="hero-image" alt="Čerstvá zelenina a barevné suroviny">
+          <div class="hero__photo-caption"><div><small>Každý den něco dobrého</small><strong>Čerstvost, kterou poznáte.</strong></div><span data-icon="arrow"></span></div>
+        </div>
+        <div class="hero__seal"><span data-icon="leaf"></span><strong>Čerstvý<br>výběr</strong></div>
+      </div>
+    </section>
+
+    <section class="shell benefits" aria-label="Proč nakoupit u nás">
+      <div class="benefit"><span class="benefit__icon" data-icon="leaf"></span><span><strong>Pečlivě vybraný sortiment</strong><small>Každodenní dobroty na jednom místě</small></span></div>
+      <div class="benefit"><span class="benefit__icon" data-icon="bag"></span><span><strong>Blízko, když je potřeba</strong><small>Rychlý nákup bez zbytečné cesty</small></span></div>
+      <div class="benefit"><span class="benefit__icon" data-icon="star"></span><span><strong>Férové ceny a akce</strong><small>Dobrá kvalita, příjemná cena</small></span></div>
+    </section>
+
+    <section class="section section--sale" id="akce">
+      <div class="shell">
+        <div class="section-heading">
+          <div class="section-heading__copy"><span class="section-kicker">Něco navíc za lepší cenu</span><h2>Akční nabídka</h2><p>Vybrané dobroty, které právě stojí za to. Nabídka se může kdykoli změnit.</p></div>
+          <span class="section-heading__aside" id="sale-count"></span>
+        </div>
+        <div class="product-grid product-grid--sale" id="sale-grid"></div>
+      </div>
+    </section>
+
+    <section class="section" id="katalog">
+      <div class="shell">
+        <div class="section-heading">
+          <div class="section-heading__copy"><span class="section-kicker">Malý obchod, spousta dobrých věcí</span><h2>Co najdete v naší sámošce</h2><p>Prohlédněte si aktuální sortiment a dostupnost. Vyberte si kategorii, která vás zajímá.</p></div>
+          <span class="section-heading__aside" id="catalog-count"></span>
+        </div>
+        <div class="filter-list" id="filter-list" aria-label="Filtrovat produkty podle kategorie"></div>
+        <div class="product-grid" id="product-grid"></div>
+      </div>
+    </section>
+
+    <section class="shell local-banner">
+      <div class="local-banner__copy"><span>Moje Sámoška — demo ukázka</span><h2>Všechno dobré začíná za rohem.</h2><p>Poctivý výběr pro každodenní vaření i malou radost cestou domů.</p></div>
+      <a class="button button--primary" href="#katalog">Prohlédnout sortiment <span data-icon="arrow"></span></a>
+    </section>
+  </main>
+
+  <main class="admin-shell" id="admin-view" hidden>
+    <header class="admin-header">
+      <div class="shell admin-header__inner">
+        <div class="admin-identity">
+          <a class="brand" href="#admin" aria-label="Moje Sámoška — administrační přehled"><span class="brand__mark" data-icon="leaf"></span><span class="brand__copy"><span class="brand__name">Moje Sámoška</span><span class="brand__tagline">Portál pro majitele</span></span></a>
+          <span class="admin-label">Ukázkový režim</span>
+        </div>
+        <div class="admin-header__actions">
+          <button class="button button--soft" id="back-to-store" type="button">Zpět na web</button>
+          <button class="button button--soft" id="logout" type="button"><span data-icon="logout"></span> Odhlásit</button>
+        </div>
+      </div>
+    </header>
+    <div class="shell admin-main" id="admin">
+      <div class="admin-welcome"><div><span class="section-kicker">Přehled pro majitele</span><h1>Správa sortimentu</h1><p>Upravte nabídku, ceny i sklad. Změny se na veřejném webu projeví okamžitě.</p></div></div>
+      <section class="admin-stats" aria-label="Souhrn sortimentu">
+        <article class="stat-card"><div class="stat-card__top"><span class="stat-card__icon" data-icon="bag"></span><span>Produkty v nabídce</span></div><strong class="stat-card__value" id="stat-products">0</strong><small class="stat-card__hint">Celkový počet položek katalogu</small></article>
+        <article class="stat-card"><div class="stat-card__top"><span class="stat-card__icon" data-icon="check"></span><span>Kusy skladem</span></div><strong class="stat-card__value" id="stat-stock">0</strong><small class="stat-card__hint" id="stat-stock-hint"></small></article>
+        <article class="stat-card"><div class="stat-card__top"><span class="stat-card__icon" data-icon="star"></span><span>Produkty v akci</span></div><strong class="stat-card__value" id="stat-action">0</strong><small class="stat-card__hint">Zobrazené v akční nabídce webu</small></article>
+      </section>
+      <section class="inventory-panel" aria-label="Tabulka produktů">
+        <div class="inventory-panel__header"><div class="inventory-panel__title"><h2>Všechny produkty</h2><p>Přehled položek a jejich aktuální dostupnosti</p></div><button class="button button--primary" id="add-product" type="button"><span data-icon="plus"></span> Přidat nový produkt</button></div>
+        <div class="table-scroll" id="table-holder"></div>
+      </section>
+      <p class="admin-footnote"><span class="admin-footnote__dot"></span> Ukázka ukládá změny v tomto prohlížeči. Pro živý obchod nahraďte mock přihlášení a místní úložiště skutečným backendem.</p>
+    </div>
+  </main>
+
+  <footer class="site-footer" id="site-footer">
+    <div class="shell site-footer__inner">
+      <div class="brand"><span class="brand__mark" data-icon="leaf"></span><span class="brand__copy"><span class="brand__name">Moje Sámoška</span><span class="brand__tagline">Dobré věci od sousedů</span></span></div>
+      <span class="footer-copy">Ukázkový web pro lokální prodejnu · nabídka se může změnit.</span>
+      <div class="footer-links"><a href="#domu">Nahoru ↑</a><a href="#katalog">Sortiment</a></div>
+    </div>
+  </footer>
+
+  <div class="overlay" id="login-modal" hidden>
+    <section class="dialog" role="dialog" aria-modal="true" aria-labelledby="login-title">
+      <button class="dialog__close" type="button" data-close="login-modal" aria-label="Zavřít přihlášení"><span data-icon="close"></span></button>
+      <span class="dialog__icon" data-icon="lock"></span>
+      <h2 class="dialog__title" id="login-title">Vítejte v portálu</h2>
+      <p class="dialog__subtitle">Přihlaste se do administračního rozhraní a spravujte sortiment své sámošky.</p>
+      <form class="form-stack" id="login-form">
+        <label class="field"><span class="field__label">Jméno</span><input class="input" id="login-username" autocomplete="username" placeholder="Zadejte jméno" required></label>
+        <label class="field"><span class="field__label">Heslo</span><span class="password-wrap"><input class="input" id="login-password" type="password" autocomplete="current-password" placeholder="Zadejte heslo" required><button class="password-toggle" id="toggle-password" type="button">Zobrazit</button></span></label>
+        <p class="error-message" id="login-error" role="alert" hidden></p>
+        <div class="demo-credentials"><span>Ukázkové přihlášení</span><strong>admin / admin</strong></div>
+        <button class="button button--primary button--wide" type="submit">Přihlásit se <span data-icon="arrow"></span></button>
+      </form>
+    </section>
+  </div>
+
+  <div class="overlay" id="product-modal" hidden>
+    <section class="dialog dialog--wide" role="dialog" aria-modal="true" aria-labelledby="product-dialog-title">
+      <button class="dialog__close" type="button" data-close="product-modal" aria-label="Zavřít formulář"><span data-icon="close"></span></button>
+      <span class="dialog__icon" id="product-dialog-icon" data-icon="plus"></span>
+      <h2 class="dialog__title" id="product-dialog-title">Přidat nový produkt</h2>
+      <p class="dialog__subtitle">Vyplňte údaje, které se hned promítnou do veřejného katalogu a přehledu skladu.</p>
+      <form id="product-form" novalidate>
+        <div class="form-grid">
+          <label class="field field--full"><span class="field__label">Název produktu</span><input class="input" id="product-title" placeholder="Např. Čerstvý chléb" required></label>
+          <label class="field"><span class="field__label">Cena (Kč)</span><input class="input" id="product-price" type="number" min="0.01" step="0.01" placeholder="Např. 29" required></label>
+          <label class="field"><span class="field__label">Kategorie</span><select class="select" id="product-category" required></select></label>
+          <label class="field field--full"><span class="field__label">Fotografie produktu — URL <span style="color:#95a097;font-weight:500">(nepovinné)</span></span><input class="input" id="product-image" type="url" placeholder="Prázdné = obrázek podle kategorie"><small class="field-hint">Použijte přímý odkaz na obrázek, například z Unsplash.</small></label>
+          <label class="check-card" id="action-check-card"><input id="product-action" type="checkbox"><span>Zařadit do akční nabídky</span></label>
+          <label class="check-card" id="stock-check-card"><input id="product-in-stock" type="checkbox"><span>Skladem</span></label>
+          <label class="field field--full"><span class="field__label">Počet kusů skladem</span><input class="input" id="product-stock-count" type="number" min="0" step="1" placeholder="0"><small class="field-hint" id="stock-hint"></small></label>
+        </div>
+        <p class="error-message" id="product-error" role="alert" style="margin-top:13px" hidden></p>
+        <div class="dialog-actions"><button class="button button--soft" type="button" data-close="product-modal">Zrušit</button><button class="button button--primary" id="save-product" type="submit"><span data-icon="check"></span> Přidat produkt</button></div>
+      </form>
+    </section>
+  </div>
+
+  <div class="overlay" id="delete-modal" hidden>
+    <section class="dialog" role="dialog" aria-modal="true" aria-labelledby="delete-title">
+      <button class="dialog__close" type="button" data-close="delete-modal" aria-label="Zavřít potvrzení"><span data-icon="close"></span></button>
+      <span class="dialog__icon" style="background:#fff1ef;color:#a8413b" data-icon="trash"></span>
+      <h2 class="dialog__title" id="delete-title">Smazat produkt?</h2>
+      <p class="confirm-copy">Opravdu chcete odstranit produkt <span class="confirm-name" id="delete-name"></span>? Změna se ihned projeví v katalogu.</p>
+      <div class="dialog-actions"><button class="button button--soft" type="button" data-close="delete-modal">Ponechat</button><button class="button button--danger" id="confirm-delete" type="button"><span data-icon="trash"></span> Smazat produkt</button></div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden><span class="toast__check" data-icon="check"></span><span id="toast-text"></span></div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const CATEGORIES = ['Pečivo', 'Mléčné výrobky', 'Uzeniny', 'Ovoce a zelenina'];
+      const CATEGORY_IMAGES = {
+        'Pečivo': 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1200&q=85',
+        'Mléčné výrobky': 'https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?auto=format&fit=crop&w=1200&q=85',
+        'Uzeniny': 'https://images.unsplash.com/photo-1524438418049-ab2acb7aa48f?auto=format&fit=crop&w=1200&q=85',
+        'Ovoce a zelenina': 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=1200&q=85'
+      };
+      const HERO_IMAGE = 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1400&q=85';
+      const STORAGE_KEY = 'moje-samoska-products-v1';
+      const STARTER_PRODUCTS = [
+        { id: '8d273d4e-0634-4bc1-8b69-4f8b36f3ae01', title: 'Křupavý rohlík', price: 3, category: 'Pečivo', image_url: CATEGORY_IMAGES['Pečivo'], is_action: false, in_stock: true, stock_count: 150 },
+        { id: '8d273d4e-0634-4bc1-8b69-4f8b36f3ae02', title: 'Farmářské máslo 250g', price: 49, category: 'Mléčné výrobky', image_url: CATEGORY_IMAGES['Mléčné výrobky'], is_action: true, in_stock: true, stock_count: 20 },
+        { id: '8d273d4e-0634-4bc1-8b69-4f8b36f3ae03', title: 'Výběrová šunka 100g', price: 34, category: 'Uzeniny', image_url: CATEGORY_IMAGES['Uzeniny'], is_action: false, in_stock: true, stock_count: 12 },
+        { id: '8d273d4e-0634-4bc1-8b69-4f8b36f3ae04', title: 'Jablka Gala 1kg', price: 39, category: 'Ovoce a zelenina', image_url: CATEGORY_IMAGES['Ovoce a zelenina'], is_action: true, in_stock: false, stock_count: 0 }
+      ];
+      const CATEGORY_EMOJIS = { 'Pečivo': '🥖', 'Mléčné výrobky': '🥛', 'Uzeniny': '🥩', 'Ovoce a zelenina': '🍎' };
+      const ICONS = {
+        leaf: '<path d="M20.5 3.5C11 3.7 5.1 5.1 4 11.2c-.6 3.2 1.5 5.4 4.4 5.4 6.7 0 10.2-7.5 12.1-13.1Z"/><path d="M3.5 21c2.5-5.3 6.2-8.8 11.8-11.6"/>',
+        lock: '<rect x="4.5" y="10" width="15" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="M12 14v3"/>',
+        arrow: '<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>',
+        plus: '<path d="M12 5v14"/><path d="M5 12h14"/>',
+        edit: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/>',
+        trash: '<path d="M3.5 6.5h17"/><path d="M9 6.5V4h6v2.5"/><path d="m6 6.5 1 14h10l1-14"/><path d="M10 10v7M14 10v7"/>',
+        close: '<path d="m6 6 12 12M18 6 6 18"/>',
+        check: '<path d="m5 12.5 4.2 4.2L19 7"/>',
+        logout: '<path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/>',
+        bag: '<path d="M5 8h14l1 12H4L5 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/><path d="M8 12v.01M16 12v.01"/>',
+        clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+        star: '<path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z"/>'
+      };
+
+      const svg = (name, size = 18) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`;
+      const escapeHTML = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+      const formatPrice = (value) => `${new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 2 }).format(Number(value) || 0)} Kč`;
+      const plural = (count, one, few, many) => {
+        if (count === 1) return one;
+        const last = count % 10;
+        const lastTwo = count % 100;
+        return last >= 2 && last <= 4 && (lastTwo < 12 || lastTwo > 14) ? few : many;
+      };
+      const available = (product) => Boolean(product.in_stock) && Number(product.stock_count) > 0;
+      const hasAdminPath = () => /(?:^|\/)admin\/?$/i.test(window.location.pathname);
+      const imageFor = (product) => product.image_url || CATEGORY_IMAGES[product.category] || CATEGORY_IMAGES['Pečivo'];
+      const readProducts = () => {
+        try {
+          const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+          if (Array.isArray(saved)) return saved;
+        } catch (error) {
+          console.warn('Místní úložiště není dostupné, načítám výchozí produkty.', error);
+        }
+        return STARTER_PRODUCTS.map((product) => ({ ...product }));
+      };
+
+      let products = readProducts();
+      let activeCategory = 'Vše';
+      let isAuthenticated = false;
+      let adminRoute = hasAdminPath();
+      let editingId = null;
+      let pendingDeleteId = null;
+      let toastTimeout = null;
+
+      const $ = (selector) => document.querySelector(selector);
+      const $$ = (selector) => Array.from(document.querySelectorAll(selector));
+
+      function setIcons() {
+        $$('[data-icon]').forEach((element) => {
+          const name = element.getAttribute('data-icon');
+          if (ICONS[name]) element.innerHTML = svg(name, 18);
+        });
+        $('#brand-icon').innerHTML = svg('leaf', 23);
+        $('#announcement-hours').innerHTML = `${svg('clock', 13)} Čerstvý výběr každý den`;
+        $('#hero-image').src = HERO_IMAGE;
+        $('#hero-image').dataset.fallback = CATEGORY_IMAGES['Ovoce a zelenina'];
+      }
+
+      function stockBadge(product) {
+        if (available(product)) {
+          return `<span class="stock-badge stock-badge--available"><span class="stock-badge__dot"></span>Skladem (${Number(product.stock_count)} ks)</span>`;
+        }
+        return '<span class="stock-badge stock-badge--empty"><span class="stock-badge__dot"></span>VYPRODÁNO</span>';
+      }
+
+      function productCard(product) {
+        const fallback = CATEGORY_IMAGES[product.category] || CATEGORY_IMAGES['Pečivo'];
+        return `<article class="product-card">
+          <div class="product-card__image-wrap">
+            <img class="product-card__image" src="${escapeHTML(imageFor(product))}" data-fallback="${escapeHTML(fallback)}" alt="${escapeHTML(product.title)}" loading="lazy">
+            ${product.is_action ? `<div class="product-card__labels"><span class="sale-badge">${svg('star', 11)} AKCE</span></div>` : ''}
+          </div>
+          <div class="product-card__body">
+            <span class="product-category">${escapeHTML(product.category)}</span>
+            <h3 class="product-title">${escapeHTML(product.title)}</h3>
+            <div class="product-card__price-row"><div class="product-price">${new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 2 }).format(Number(product.price) || 0)}<small>Kč</small></div>${stockBadge(product)}</div>
+          </div>
+        </article>`;
+      }
+
+      function renderStore() {
+        const saleProducts = products.filter((product) => Boolean(product.is_action));
+        const filteredProducts = activeCategory === 'Vše' ? products : products.filter((product) => product.category === activeCategory);
+        $('#sale-count').textContent = `${saleProducts.length} ${plural(saleProducts.length, 'produkt v akci', 'produkty v akci', 'produktů v akci')}`;
+        $('#catalog-count').textContent = `${products.length} ${plural(products.length, 'produkt v nabídce', 'produkty v nabídce', 'produktů v nabídce')}`;
+        $('#sale-grid').classList.toggle('product-grid--empty', saleProducts.length === 0);
+        $('#sale-grid').innerHTML = saleProducts.length
+          ? saleProducts.map(productCard).join('')
+          : '<div class="empty-state"><strong>Nové akce právě chystáme.</strong>Mrkněte zatím na naši nabídku v katalogu.</div>';
+        $('#product-grid').innerHTML = filteredProducts.length
+          ? filteredProducts.map(productCard).join('')
+          : '<div class="empty-state"><strong>V této kategorii zatím nic není.</strong>Zkuste vybrat jinou kategorii nebo se vraťte později.</div>';
+        const categoryButtons = [
+          `<button class="filter-chip ${activeCategory === 'Vše' ? 'filter-chip--active' : ''}" type="button" data-filter="Vše" aria-pressed="${activeCategory === 'Vše'}">Všechny potraviny <span class="filter-chip__count">${products.length}</span></button>`,
+          ...CATEGORIES.map((category) => {
+            const count = products.filter((product) => product.category === category).length;
+            return `<button class="filter-chip ${activeCategory === category ? 'filter-chip--active' : ''}" type="button" data-filter="${escapeHTML(category)}" aria-pressed="${activeCategory === category}"><span class="filter-chip__emoji" aria-hidden="true">${CATEGORY_EMOJIS[category]}</span>${escapeHTML(category)}<span class="filter-chip__count">${count}</span></button>`;
+          })
+        ];
+        $('#filter-list').innerHTML = categoryButtons.join('');
+      }
+
+      function renderAdmin() {
+        const availableProducts = products.filter(available);
+        const stockUnits = products.reduce((total, product) => total + (available(product) ? Number(product.stock_count) : 0), 0);
+        $('#stat-products').textContent = String(products.length);
+        $('#stat-stock').textContent = new Intl.NumberFormat('cs-CZ').format(stockUnits);
+        $('#stat-stock-hint').textContent = `Napříč ${availableProducts.length} dostupnými ${plural(availableProducts.length, 'produktem', 'produkty', 'produkty')}`;
+        $('#stat-action').textContent = String(products.filter((product) => Boolean(product.is_action)).length);
+        const holder = $('#table-holder');
+        if (!products.length) {
+          holder.innerHTML = '<div class="inventory-empty">Sortiment je zatím prázdný. Přidejte první produkt a objeví se také na veřejném webu.</div>';
+          return;
+        }
+        holder.innerHTML = `<table class="product-table"><thead><tr><th scope="col">Produkt</th><th scope="col">Cena</th><th scope="col">Nabídka</th><th scope="col">Stav skladu</th><th scope="col">Správa</th></tr></thead><tbody>${products.map((product) => {
+          const fallback = CATEGORY_IMAGES[product.category] || CATEGORY_IMAGES['Pečivo'];
+          return `<tr>
+            <td><div class="table-product"><span class="table-product__image"><img src="${escapeHTML(imageFor(product))}" data-fallback="${escapeHTML(fallback)}" alt=""></span><span class="table-product__text"><strong>${escapeHTML(product.title)}</strong><small>${escapeHTML(product.category)}</small></span></div></td>
+            <td class="table-price">${formatPrice(product.price)}</td>
+            <td>${product.is_action ? `<span class="sale-badge">${svg('star', 10)} AKCE</span>` : '<span style="color:#9aa49c">—</span>'}</td>
+            <td>${stockBadge(product)}</td>
+            <td><div class="table-action-group"><button class="row-button" type="button" data-edit="${escapeHTML(product.id)}" aria-label="Upravit produkt ${escapeHTML(product.title)}">${svg('edit', 14)} Upravit</button><button class="row-button row-button--delete" type="button" data-delete="${escapeHTML(product.id)}" aria-label="Smazat produkt ${escapeHTML(product.title)}">${svg('trash', 14)} Smazat</button></div></td>
+          </tr>`;
+        }).join('')}</tbody></table>`;
+      }
+
+      function renderAll() {
+        renderStore();
+        renderAdmin();
+      }
+
+      function persistProducts() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+        } catch (error) {
+          console.warn('Změny nebylo možné uložit do místního úložiště.', error);
+        }
+      }
+
+      function showToast(message) {
+        const toast = $('#toast');
+        $('#toast-text').textContent = message;
+        toast.hidden = false;
+        window.clearTimeout(toastTimeout);
+        toastTimeout = window.setTimeout(() => { toast.hidden = true; }, 2800);
+      }
+
+      function openModal(id) {
+        const modal = document.getElementById(id);
+        if (!modal) return;
+        modal.hidden = false;
+        document.body.classList.add('modal-open');
+        const focusTarget = modal.querySelector('input:not([disabled]),button:not([data-close])');
+        window.setTimeout(() => focusTarget?.focus(), 30);
+      }
+
+      function closeModal(id) {
+        const modal = document.getElementById(id);
+        if (modal) modal.hidden = true;
+        if ($$('.overlay').every((item) => item.hidden)) document.body.classList.remove('modal-open');
+        if (id === 'login-modal' && adminRoute && !isAuthenticated) leaveAdminRoute();
+      }
+
+      function showAdmin() {
+        $('#store-view').hidden = true;
+        $('#site-footer').hidden = true;
+        $('#admin-view').hidden = false;
+        renderAdmin();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function showStore() {
+        $('#store-view').hidden = false;
+        $('#site-footer').hidden = false;
+        $('#admin-view').hidden = true;
+        renderStore();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function adminBasePath() {
+        const cleanPath = window.location.pathname.replace(/\/+$/, '');
+        const marker = cleanPath.toLowerCase().lastIndexOf('/admin');
+        return marker >= 0 ? (cleanPath.slice(0, marker + 1) || '/') : '/';
+      }
+
+      function openAdminRoute() {
+        $('#store-view').hidden = true;
+        $('#site-footer').hidden = true;
+        $('#admin-view').hidden = true;
+        $('#login-error').hidden = true;
+        openModal('login-modal');
+      }
+
+      function leaveAdminRoute() {
+        const rootPath = adminBasePath();
+        adminRoute = false;
+        window.history.replaceState(null, '', rootPath);
+        showStore();
+      }
+
+      function openProductForm(product = null) {
+        editingId = product ? product.id : null;
+        $('#product-dialog-title').textContent = product ? 'Upravit produkt' : 'Přidat nový produkt';
+        $('#product-dialog-icon').innerHTML = svg(product ? 'edit' : 'plus', 22);
+        $('#save-product').innerHTML = `${svg('check', 16)} ${product ? 'Uložit změny' : 'Přidat produkt'}`;
+        $('#product-title').value = product?.title || '';
+        $('#product-price').value = product ? String(product.price) : '';
+        $('#product-category').innerHTML = CATEGORIES.map((category) => `<option value="${escapeHTML(category)}">${escapeHTML(category)}</option>`).join('');
+        $('#product-category').value = product?.category || 'Pečivo';
+        $('#product-image').value = product?.image_url || '';
+        $('#product-action').checked = product ? Boolean(product.is_action) : false;
+        $('#product-in-stock').checked = product ? Boolean(product.in_stock) : true;
+        $('#product-stock-count').value = product ? String(product.stock_count) : '1';
+        $('#product-stock-count').disabled = !$('#product-in-stock').checked;
+        $('#stock-hint').textContent = $('#product-in-stock').checked ? 'Při nulovém počtu se produkt zobrazí jako vyprodaný.' : 'Produkt bude označen jako vyprodaný a počet kusů bude 0.';
+        $('#product-error').hidden = true;
+        openModal('product-modal');
+      }
+
+      function setCategory(category, scroll = true) {
+        activeCategory = category;
+        renderStore();
+        if (scroll) window.setTimeout(() => $('#katalog').scrollIntoView({ behavior: 'smooth', block: 'start' }), 0);
+      }
+
+      setIcons();
+      renderAll();
+
+      document.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        const navCategory = target.closest('[data-nav-category]');
+        if (navCategory) setCategory(navCategory.getAttribute('data-nav-category'));
+        const filter = target.closest('[data-filter]');
+        if (filter) setCategory(filter.getAttribute('data-filter'), false);
+        const closeButton = target.closest('[data-close]');
+        if (closeButton) closeModal(closeButton.getAttribute('data-close'));
+        const editButton = target.closest('[data-edit]');
+        if (editButton) {
+          const product = products.find((item) => item.id === editButton.getAttribute('data-edit'));
+          if (product) openProductForm(product);
+        }
+        const deleteButton = target.closest('[data-delete]');
+        if (deleteButton) {
+          pendingDeleteId = deleteButton.getAttribute('data-delete');
+          const product = products.find((item) => item.id === pendingDeleteId);
+          if (product) {
+            $('#delete-name').textContent = `„${product.title}“`;
+            openModal('delete-modal');
+          }
+        }
+      });
+
+      $$('.overlay').forEach((overlay) => overlay.addEventListener('mousedown', (event) => {
+        if (event.target === overlay) closeModal(overlay.id);
+      }));
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          const visible = $$('.overlay').filter((item) => !item.hidden).pop();
+          if (visible) closeModal(visible.id);
+        }
+      });
+      document.addEventListener('error', (event) => {
+        const image = event.target;
+        if (image instanceof HTMLImageElement && image.dataset.fallback && image.dataset.fallbackApplied !== 'true') {
+          image.dataset.fallbackApplied = 'true';
+          image.src = image.dataset.fallback;
+        }
+      }, true);
+
+      $('#login-form').addEventListener('submit', (event) => {
+        event.preventDefault();
+        const username = $('#login-username').value.trim();
+        const password = $('#login-password').value;
+        if (username === 'admin' && password === 'admin') {
+          isAuthenticated = true;
+          closeModal('login-modal');
+          $('#login-form').reset();
+          $('#login-error').hidden = true;
+          showAdmin();
+          showToast('Přihlášení proběhlo úspěšně.');
+        } else {
+          $('#login-error').textContent = 'Zadané jméno nebo heslo nesouhlasí. Zkuste admin / admin.';
+          $('#login-error').hidden = false;
+        }
+      });
+      $('#toggle-password').addEventListener('click', () => {
+        const input = $('#login-password');
+        const visible = input.type === 'text';
+        input.type = visible ? 'password' : 'text';
+        $('#toggle-password').textContent = visible ? 'Zobrazit' : 'Skrýt';
+      });
+      $('#back-to-store').addEventListener('click', leaveAdminRoute);
+      $('#logout').addEventListener('click', () => {
+        isAuthenticated = false;
+        leaveAdminRoute();
+        showToast('Byli jste odhlášeni z portálu.');
+      });
+      $('#add-product').addEventListener('click', () => openProductForm());
+      $('#product-in-stock').addEventListener('change', () => {
+        const checked = $('#product-in-stock').checked;
+        const count = $('#product-stock-count');
+        if (!checked) count.value = '0';
+        else if (Number(count.value) <= 0) count.value = '1';
+        count.disabled = !checked;
+        $('#stock-hint').textContent = checked ? 'Při nulovém počtu se produkt zobrazí jako vyprodaný.' : 'Produkt bude označen jako vyprodaný a počet kusů bude 0.';
+      });
+      $('#product-form').addEventListener('submit', (event) => {
+        event.preventDefault();
+        const title = $('#product-title').value.trim();
+        const price = Number($('#product-price').value);
+        const category = $('#product-category').value;
+        const imageUrl = $('#product-image').value.trim();
+        const stockCount = Number($('#product-stock-count').value);
+        const inStockChecked = $('#product-in-stock').checked;
+        const errorBox = $('#product-error');
+        let message = '';
+        if (!title) message = 'Doplňte název produktu.';
+        else if (!Number.isFinite(price) || price <= 0) message = 'Cena musí být číslo větší než nula.';
+        else if (!Number.isInteger(stockCount) || stockCount < 0) message = 'Počet kusů musí být celé číslo od nuly výše.';
+        else if (!CATEGORIES.includes(category)) message = 'Vyberte platnou kategorii.';
+        else if (imageUrl) {
+          try {
+            const parsed = new URL(imageUrl);
+            if (!['http:', 'https:'].includes(parsed.protocol)) message = 'Adresa fotografie musí začínat http:// nebo https://.';
+          } catch (error) {
+            message = 'Adresa fotografie musí být platná URL.';
+          }
+        }
+        if (message) {
+          errorBox.textContent = message;
+          errorBox.hidden = false;
+          return;
+        }
+        const normalizedCount = inStockChecked ? stockCount : 0;
+        const values = {
+          id: editingId || (crypto.randomUUID ? crypto.randomUUID() : `product-${Date.now()}-${Math.round(Math.random() * 100000)}`),
+          title,
+          price,
+          category,
+          image_url: imageUrl || CATEGORY_IMAGES[category],
+          is_action: $('#product-action').checked,
+          in_stock: inStockChecked && normalizedCount > 0,
+          stock_count: normalizedCount
+        };
+        if (editingId) products = products.map((product) => product.id === editingId ? values : product);
+        else products.unshift(values);
+        persistProducts();
+        renderAll();
+        closeModal('product-modal');
+        showToast(editingId ? 'Změny produktu byly uloženy.' : 'Nový produkt byl přidán do katalogu.');
+        editingId = null;
+      });
+      $('#confirm-delete').addEventListener('click', () => {
+        if (!pendingDeleteId) return;
+        const deleted = products.find((product) => product.id === pendingDeleteId);
+        products = products.filter((product) => product.id !== pendingDeleteId);
+        persistProducts();
+        renderAll();
+        closeModal('delete-modal');
+        showToast(`Produkt „${deleted?.title || ''}“ byl smazán.`);
+        pendingDeleteId = null;
+      });
+
+      window.addEventListener('popstate', () => {
+        adminRoute = hasAdminPath();
+        if (adminRoute) {
+          if (isAuthenticated) showAdmin();
+          else openAdminRoute();
+        } else {
+          if (!$('#login-modal').hidden) closeModal('login-modal');
+          showStore();
+        }
+      });
+
+      if (adminRoute) openAdminRoute();
+    })();
+  </script>
+</body>
+</html>

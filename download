@@ -1,0 +1,16 @@
+node_modules/
+.npm/
+.next/
+.config/nextjs-nodejs/
+out/
+build/
+coverage/
+*.tsbuildinfo
+*.log
+.env*
+.DS_Store
+
+# Generated from the flat root source files by prepare.mjs
+/app/
+/lib/
+/supabase/
